@@ -3,6 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
 var request = require("request");
+var safeEval = require('safe-eval')
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -27,7 +28,8 @@ app.post('/', jsonParser, function(req, res) {
     if (event.message && event.message.text) {
       text = event.message.text;
       // Handle a text message from this sender
-      sendTextMessage(sender, "Text received, echo: "+ text.substring(0, 200));
+      evaluated = safeEval(text);
+      sendTextMessage(sender, evaluated);
     }
   }
   res.sendStatus(200);
