@@ -28,7 +28,12 @@ app.post('/', jsonParser, function(req, res) {
     if (event.message && event.message.text) {
       text = event.message.text;
       // Handle a text message from this sender
-      evaluated = safeEval(text);
+      var evaluated;
+      try {
+        evaluated = safeEval(text);
+      } catch (error) {
+        evaluated = error.toString();
+      }
       sendTextMessage(sender, evaluated);
     }
   }
